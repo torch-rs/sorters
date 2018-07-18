@@ -1,3 +1,4 @@
+pub mod alphabetical_sorter;
 pub mod files_sorter;
 
 pub trait Sorter {
