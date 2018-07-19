@@ -67,15 +67,11 @@ impl WeightedSort for FrequencySorter {
     }
 
     fn decrement_weight(&mut self, key: String) {
-        if let Some(value) = self.weights.get_mut(&key) {
-            *value -= 1;
-        }
+        *self.weights.entry(key).or_insert(1) -= 1;
     }
 
     fn increment_weight(&mut self, key: String) {
-        if let Some(value) = self.weights.get_mut(&key) {
-            *value += 1;
-        }
+        *self.weights.entry(key).or_insert(1) += 1;
     }
 
     fn update_weight(&mut self, key: String, value: i32) {
