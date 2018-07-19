@@ -1,5 +1,6 @@
 pub mod alphabetical_sorter;
 pub mod files_sorter;
+pub mod frequency_sorter;
 
 pub trait Sort {
 
