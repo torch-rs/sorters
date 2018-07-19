@@ -1,8 +1,8 @@
-use Sorter;
+use Sort;
 
 pub struct AlphabeticalSorter;
 
-impl Sorter for AlphabeticalSorter {
+impl Sort for AlphabeticalSorter {
 
     fn sort(candidates: &Vec<String>) -> Vec<String> {
         let mut candidates = candidates.to_vec();
@@ -15,7 +15,7 @@ impl Sorter for AlphabeticalSorter {
 #[cfg(test)]
 mod tests {
 
-    use Sorter;
+    use Sort;
     use alphabetical_sorter::AlphabeticalSorter;
 
     #[test]

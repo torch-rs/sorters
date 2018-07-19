@@ -1,7 +1,7 @@
 pub mod alphabetical_sorter;
 pub mod files_sorter;
 
-pub trait Sorter {
+pub trait Sort {
 
     fn sort(candidates: &Vec<String>) -> Vec<String>;
 

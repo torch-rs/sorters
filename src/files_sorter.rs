@@ -5,11 +5,11 @@ use std::path::MAIN_SEPARATOR;
 
 use self::regex::Regex;
 
-use Sorter;
+use Sort;
 
 pub struct FilesSorter;
 
-impl Sorter for FilesSorter {
+impl Sort for FilesSorter {
 
     fn sort(candidates: &Vec<String>) -> Vec<String> {
         let mut candidates = candidates.to_vec();
@@ -33,7 +33,7 @@ impl Sorter for FilesSorter {
 #[cfg(test)]
 mod tests {
 
-    use Sorter;
+    use Sort;
     use files_sorter::FilesSorter;
 
     #[test]
