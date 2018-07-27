@@ -1,8 +1,11 @@
 extern crate fs2;
+extern crate search_candidate;
 extern crate serde;
 extern crate serde_pickle;
 
 use self::fs2::FileExt;
+use self::search_candidate::SearchCandidate;
+use self::search_candidate::Key;
 
 use std::cmp::Ordering;
 use std::collections::HashMap;
@@ -40,17 +43,19 @@ impl WeightedSort for FrequencySorter {
         }
     }
 
-    fn sort(&self, candidates: &Vec<String>) -> Vec<String> {
+    fn sort(&self, candidates: &Vec<SearchCandidate>) -> Vec<SearchCandidate> {
         let mut candidates = candidates.to_vec();
         candidates.sort_by(|a, b| {
-            let weight_a = self.weights.get(a.as_str()).unwrap_or(&1);
-            let weight_b = self.weights.get(b.as_str()).unwrap_or(&1);
+            let a_display_text = a.get_value(Key::DisplayText);
+            let b_display_text = b.get_value(Key::DisplayText);
+            let weight_a = self.weights.get(a_display_text.as_str()).unwrap_or(&1);
+            let weight_b = self.weights.get(b_display_text.as_str()).unwrap_or(&1);
             if weight_a < weight_b {
                 return Ordering::Greater;
             } else if weight_a > weight_b {
                 return Ordering::Less;
             } else {
-                return a.cmp(b);
+                return a_display_text.cmp(&b_display_text);
             }
         });
         candidates
@@ -83,32 +88,62 @@ impl WeightedSort for FrequencySorter {
 #[cfg(test)]
 mod tests {
 
+    extern crate search_candidate;
+
     use WeightedSort;
     use frequency_sorter::FrequencySorter;
     use std::fs::remove_file;
+    use self::search_candidate::SearchCandidate;
+    use self::search_candidate::Key;
 
     #[test]
     fn no_file_create() {
-        let sorter = FrequencySorter::new("app".to_string());
-        let sample_data = vec!["abc".to_string(), "adc".to_string(), "aaa".to_string(), "bbvb".to_string(),
-                               "bacs".to_string()];
-        let sorted_data = sorter.sort(&sample_data);
-        assert_eq!(sorted_data, ["aaa", "abc", "adc", "bacs", "bbvb"]);
+        let sorter = FrequencySorter::new("test".to_string());
+        let sample_search_candidates = vec![
+            SearchCandidate::new(String::from("abc"),
+                                 String::from("abc"), String::new()),
+            SearchCandidate::new(String::from("adc"),
+                                 String::from("adc"), String::new()),
+            SearchCandidate::new(String::from("aaa"),
+                                 String::from("aaa"), String::new()),
+            SearchCandidate::new(String::from("bbvb"),
+                                 String::from("bbvb"), String::new()),
+            SearchCandidate::new(String::from("bacs"),
+                                 String::from("bacs"), String::new()),
+        ];
+        let actual_sorted_order = vec!["aaa", "abc", "adc", "bacs", "bbvb"];
+        let sorted_candidates = sorter.sort(&sample_search_candidates); 
+        for i in 0..sorted_candidates.len() {
+            assert_eq!(sorted_candidates[i].get_value(Key::DisplayText), actual_sorted_order[i]);
+        }
     }
 
     #[test]
     fn with_file_created() {
-        let mut setup_sorter = FrequencySorter::new("test".to_string());
+        let mut setup_sorter = FrequencySorter::new("another_test".to_string());
         setup_sorter.update_weight(String::from("bacs"), 4);
         setup_sorter.update_weight(String::from("adc"), 5);
         setup_sorter.save();
 
-        let sample_data = vec!["abc".to_string(), "adc".to_string(), "aaa".to_string(), "bbvb".to_string(),
-                               "bacs".to_string()];
-        let sorter = FrequencySorter::new("test".to_string());
-        let sorted_data = sorter.sort(&sample_data);
-        assert_eq!(sorted_data, ["adc", "bacs", "aaa", "abc", "bbvb"]);
-        remove_file("test").unwrap();
+        let sorter = FrequencySorter::new("another_test".to_string());
+        let sample_search_candidates = vec![
+            SearchCandidate::new(String::from("abc"),
+                                 String::from("abc"), String::new()),
+            SearchCandidate::new(String::from("adc"),
+                                 String::from("adc"), String::new()),
+            SearchCandidate::new(String::from("aaa"),
+                                 String::from("aaa"), String::new()),
+            SearchCandidate::new(String::from("bbvb"),
+                                 String::from("bbvb"), String::new()),
+            SearchCandidate::new(String::from("bacs"),
+                                 String::from("bacs"), String::new()),
+        ];
+        let actual_sorted_order = vec!["adc", "bacs", "aaa", "abc", "bbvb"];
+        let sorted_candidates = sorter.sort(&sample_search_candidates); 
+        for i in 0..sorted_candidates.len() {
+            assert_eq!(sorted_candidates[i].get_value(Key::DisplayText), actual_sorted_order[i]);
+        }
+        remove_file("another_test").unwrap();
     }
 
 }
