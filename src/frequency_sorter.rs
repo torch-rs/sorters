@@ -4,15 +4,13 @@ extern crate serde;
 extern crate serde_pickle;
 
 use self::fs2::FileExt;
-use self::search_candidate::SearchCandidate;
 use self::search_candidate::Key;
-
+use self::search_candidate::SearchCandidate;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 use std::io::Write;
-
 use WeightedSort;
 
 pub struct FrequencySorter {
@@ -90,11 +88,11 @@ mod tests {
 
     extern crate search_candidate;
 
-    use WeightedSort;
     use frequency_sorter::FrequencySorter;
-    use std::fs::remove_file;
-    use self::search_candidate::SearchCandidate;
     use self::search_candidate::Key;
+    use self::search_candidate::SearchCandidate;
+    use std::fs::remove_file;
+    use WeightedSort;
 
     #[test]
     fn no_file_create() {

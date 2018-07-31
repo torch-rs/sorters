@@ -1,8 +1,8 @@
 extern crate search_candidate;
 
-use Sort;
 use self::search_candidate::SearchCandidate;
 use self::search_candidate::Key;
+use Sort;
 
 pub struct AlphabeticalSorter;
 
@@ -20,11 +20,11 @@ impl Sort for AlphabeticalSorter {
 mod tests {
 
     extern crate search_candidate;
-
-    use Sort;
+    
     use alphabetical_sorter::AlphabeticalSorter;
-    use self::search_candidate::SearchCandidate;
     use self::search_candidate::Key;
+    use self::search_candidate::SearchCandidate;
+    use Sort;
 
     #[test]
     fn test_sort() {

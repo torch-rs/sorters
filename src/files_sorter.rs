@@ -1,14 +1,12 @@
 extern crate regex;
 extern crate search_candidate;
 
+use self::regex::Regex;
 use self::search_candidate::SearchCandidate;
 use self::search_candidate::Key;
+use Sort;
 use std::cmp::Ordering;
 use std::path::MAIN_SEPARATOR;
-
-use self::regex::Regex;
-
-use Sort;
 
 pub struct FilesSorter;
 
@@ -40,8 +38,8 @@ mod tests {
 
     extern crate search_candidate;
 
-    use Sort;
     use files_sorter::FilesSorter;
+    use Sort;
     use self::search_candidate::SearchCandidate;
     use self::search_candidate::Key;
 
