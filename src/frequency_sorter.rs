@@ -44,16 +44,16 @@ impl WeightedSort for FrequencySorter {
     fn sort(&self, candidates: &Vec<SearchCandidate>) -> Vec<SearchCandidate> {
         let mut candidates = candidates.to_vec();
         candidates.sort_by(|a, b| {
-            let a_display_text = a.get_value(Key::DisplayText);
-            let b_display_text = b.get_value(Key::DisplayText);
-            let weight_a = self.weights.get(a_display_text.as_str()).unwrap_or(&1);
-            let weight_b = self.weights.get(b_display_text.as_str()).unwrap_or(&1);
+            let a_search_text = a.get_value(Key::SearchText);
+            let b_search_text = b.get_value(Key::SearchText);
+            let weight_a = self.weights.get(a_search_text.as_str()).unwrap_or(&1);
+            let weight_b = self.weights.get(b_search_text.as_str()).unwrap_or(&1);
             if weight_a < weight_b {
                 return Ordering::Greater;
             } else if weight_a > weight_b {
                 return Ordering::Less;
             } else {
-                return a_display_text.cmp(&b_display_text);
+                return a_search_text.cmp(&b_search_text);
             }
         });
         candidates
